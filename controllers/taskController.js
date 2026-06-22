@@ -20,6 +20,9 @@ const createTask = async (req, res) => {
   try {
     const newTask = await Task.create({
       title: req.body.title,
+      description: req.body.description || "",
+      priority: req.body.priority || "medium",
+      dueDate: req.body.dueDate || null,
       user: req.user._id,
     });
 
@@ -61,7 +64,20 @@ const updateTask = async (req, res) => {
       });
     }
 
-    task.title = req.body.title;
+    task.title = req.body.title !== undefined ? req.body.title : task.title;
+
+    task.completed =
+      req.body.completed !== undefined ? req.body.completed : task.completed;
+
+    task.priority =
+      req.body.priority !== undefined ? req.body.priority : task.priority;
+    task.description =
+      req.body.description !== undefined
+        ? req.body.description
+        : task.description;
+
+    task.dueDate =
+      req.body.dueDate !== undefined ? req.body.dueDate : task.dueDate;
 
     const updatedTask = await task.save();
 

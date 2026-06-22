@@ -8,6 +8,15 @@ const generateToken = require("../utils/generateToken");
 const registerUser = async (req, res) => {
   try {
     const { name, email, password } = req.body;
+    const passwordRegex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
+
+    if (!passwordRegex.test(password)) {
+      return res.status(400).json({
+        message:
+          "Password must contain at least 8 characters, one uppercase letter, one lowercase letter, one number and one special character.",
+      });
+    }
 
     // CHECK IF USER EXISTS
     const userExists = await User.findOne({ email });
